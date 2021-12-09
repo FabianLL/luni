@@ -135,7 +135,7 @@ const StyledCalendar = styled('div', {
   justifyContent: 'center',
   alignItems: 'center',
   flexDirection: 'column',
-  gap: 16,
+  gap: 12,
 })
 
 const StyledWeekGrid = styled('div', {
@@ -143,7 +143,7 @@ const StyledWeekGrid = styled('div', {
   height: '100%',
   display: 'grid',
   gridTemplateColumns: 'repeat(7, minmax(0, 1fr))',
-  gap: 12,
+  gap: 8,
   textAlign: 'center',
   fontWeight: 300,
   fontSize: 12,
@@ -154,7 +154,7 @@ const StyledDaysGrid = styled('div', {
   height: '100%',
   display: 'grid',
   gridTemplateColumns: 'repeat(7, minmax(0, 1fr))',
-  gap: 12,
+  gap: 8,
 })
 
 const StyledRowFlex = styled('div', {
@@ -197,7 +197,7 @@ const StyledCenter = styled('div', {
 
 const Calendar = () => {
   const [initalDate, setInitalDate] = useState<Dayjs>(dayjs())
-  const [date, setDate] = useState<Dayjs>(dayjs())
+  const [date, setDate] = useState<Dayjs>(initalDate)
   const [days, setDays] = useState<TDay[] | null>(null)
 
   useEffect(() => {
