@@ -6,16 +6,8 @@ import {
 import dayjs, { Dayjs } from 'dayjs'
 import { useEffect, useState } from 'react'
 import { styled } from '../../stitches.config'
-import { Day } from './day'
-
-type Day = {
-  year: number
-  month: number
-  dayInMonth: number | null
-  weekday: 'MON' | 'DIE' | 'MIT' | 'DON' | 'FRI' | 'SAM' | 'SON' | null
-  isCurrentDay?: boolean
-  isPast?: boolean
-}
+import { Day, TDay } from './day'
+import Time from './time/Time'
 
 const getWeekday = (weekday: Number) => {
   switch (weekday) {
@@ -38,12 +30,12 @@ const getWeekday = (weekday: Number) => {
   }
 }
 
-const getDays = (date: Dayjs): Day[] => {
+const getDays = (date: Dayjs, initalDate: Dayjs): TDay[] => {
   const totalDaysCurrentMonth = date.daysInMonth()
   let firstDayInCurrentMonth = date.startOf('month').day()
   const totalDaysLastMonth = date.subtract(date.date(), 'day').daysInMonth()
 
-  let days: Day[] = []
+  let days: TDay[] = []
   let daysPlaceholderAmount: Number = 0
 
   switch (firstDayInCurrentMonth) {
@@ -74,7 +66,7 @@ const getDays = (date: Dayjs): Day[] => {
 
   for (let index = 0; index < daysPlaceholderAmount; index++) {
     firstDayInCurrentMonth--
-    let day: Day = {
+    let day: TDay = {
       year: date.year(),
       month: date.month() - 1,
       dayInMonth: totalDaysLastMonth - index,
@@ -88,19 +80,52 @@ const getDays = (date: Dayjs): Day[] => {
   days.reverse()
 
   for (let index = 1; index <= totalDaysCurrentMonth; index++) {
-    let day: Day = {
+    let day: TDay = {
       year: date.year(),
       month: date.month(),
       dayInMonth: index,
       weekday: null,
-      isCurrentDay: date.date() == index,
+      isCurrentDay:
+        initalDate.month() === date.month() &&
+        initalDate.year() === date.year() &&
+        date.date() === index,
     }
     const dayDate = new Date(date.year(), date.month(), index).getUTCDay()
 
     day.weekday = getWeekday(dayDate)
     days.push(day)
   }
+
   return days
+}
+
+const getMonthname = (month: number) => {
+  switch (month) {
+    case 1:
+      return 'Feb'
+    case 2:
+      return 'Mär'
+    case 3:
+      return 'Apr'
+    case 4:
+      return 'Mai'
+    case 5:
+      return 'Jun'
+    case 6:
+      return 'Jul'
+    case 7:
+      return 'Aug'
+    case 8:
+      return 'Sep'
+    case 9:
+      return 'Okt'
+    case 10:
+      return 'Nov'
+    case 11:
+      return 'Dez'
+    default:
+      return 'Jan'
+  }
 }
 
 const StyledCalendar = styled('div', {
@@ -133,7 +158,7 @@ const StyledDaysGrid = styled('div', {
 })
 
 const StyledRowFlex = styled('div', {
-  width: '100%',
+  width: 'fit-content',
   height: 'fit-content',
   display: 'flex',
   justifyContent: 'space-between',
@@ -143,7 +168,7 @@ const StyledRowFlex = styled('div', {
 })
 
 const StyledRowFlexAuto = styled('div', {
-  width: 'auto',
+  width: 'fit-content',
   height: 'fit-content',
   display: 'flex',
   justifyContent: 'space-between',
@@ -154,8 +179,8 @@ const StyledRowFlexAuto = styled('div', {
 
 const StyledIconButton = styled('button', {
   all: 'unset',
-  width: 35,
-  height: 35,
+  width: 40,
+  height: 40,
   display: 'flex',
   justifyContent: 'center',
   alignItems: 'center',
@@ -164,48 +189,20 @@ const StyledIconButton = styled('button', {
 
 const StyledCenter = styled('div', {
   width: 'fit-content',
-  height: 35,
+  height: 40,
   display: 'flex',
   justifyContent: 'center',
   alignItems: 'center',
 })
 
-const getMonthname = (month: number) => {
-  switch (month) {
-    case 1:
-      return 'Feb'
-    case 2:
-      return 'Mär'
-    case 3:
-      return 'Apr'
-    case 4:
-      return 'Mai'
-    case 5:
-      return 'Jun'
-    case 6:
-      return 'Jul'
-    case 7:
-      return 'Aug'
-    case 8:
-      return 'Sep'
-    case 9:
-      return 'Okt'
-    case 10:
-      return 'Nov'
-    case 11:
-      return 'Dez'
-    default:
-      return 'Jan'
-  }
-}
-
 const Calendar = () => {
+  const [initalDate, setInitalDate] = useState<Dayjs>(dayjs())
   const [date, setDate] = useState<Dayjs>(dayjs())
-  const [days, setDays] = useState<Day[] | null>(null)
+  const [days, setDays] = useState<TDay[] | null>(null)
 
   useEffect(() => {
-    setDays(getDays(date))
-  }, [])
+    setDays(getDays(date, initalDate))
+  }, [date, initalDate])
 
   return (
     <StyledCalendar>
@@ -213,7 +210,7 @@ const Calendar = () => {
         <StyledIconButton
           onClick={() => {
             setDate(date.subtract(1, 'month'))
-            setDays(getDays(date))
+            setDays(getDays(date, initalDate))
           }}
         >
           <CaretLeftIcon />
@@ -228,7 +225,7 @@ const Calendar = () => {
         <StyledIconButton
           onClick={() => {
             setDate(date.add(1, 'month'))
-            setDays(getDays(date))
+            setDays(getDays(date, initalDate))
           }}
         >
           <CaretRightIcon />

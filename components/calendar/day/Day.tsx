@@ -3,8 +3,8 @@ import { styled } from '../../../stitches.config'
 
 const StyledDay = styled('button', {
   all: 'unset',
-  width: 35,
-  height: 35,
+  width: 40,
+  height: 40,
   display: 'flex',
   justifyContent: 'center',
   alignItems: 'center',
@@ -15,7 +15,7 @@ const StyledDay = styled('button', {
   fontWeight: 400,
   lineHeight: 1,
   fontSize: 14,
-  borderRadius: '0.125rem',
+  borderRadius: 2,
   border: '1.5px solid transparent',
   // transition: 'border 50ms',
   '&:hover': {
