@@ -7,7 +7,6 @@ import dayjs, { Dayjs } from 'dayjs'
 import { useEffect, useState } from 'react'
 import { styled } from '../../stitches.config'
 import { Day, TDay } from './day'
-import Time from './time/Time'
 
 const getWeekday = (weekday: Number) => {
   switch (weekday) {

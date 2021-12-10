@@ -8,7 +8,7 @@ const StyledDay = styled('button', {
   display: 'flex',
   justifyContent: 'center',
   alignItems: 'center',
-  gap: 4,
+  gap: 6,
   flexDirection: 'column',
   backgroundColor: '$slate2',
   cursor: 'pointer',
@@ -42,8 +42,8 @@ const StyledDay = styled('button', {
 })
 
 const StyledDot = styled('span', {
-  width: 4,
-  height: 4,
+  width: 5,
+  height: 5,
   backgroundColor: '$slate12',
   borderRadius: '100%',
   variants: {
